@@ -27,7 +27,60 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        
 
+        String messageFromClient;
+
+        while (socket.isConnected()) {
+            try {
+                messageFromClient = bufferedReader.readLine();
+                broadcastMessage(messageFromClient);
+            }
+            catch(IOException e) {
+                closeEverything(socket, bufferedWriter, bufferedReader);
+                break;
+            }
+        }
+
+    }
+
+    public void broadcastMessage(String messageToSend) {
+
+        for (ClientHandler clientHandler : clientHandlers) {
+            try {
+                if (!clientHandler.clientUsername.equals(clientUsername)) {
+                    clientHandler.bufferedWriter.write(messageToSend);
+                    clientHandler.bufferedWriter.newLine();
+                    clientHandler.bufferedWriter.flush();
+                }
+            }
+            catch (IOException e) {
+                closeEverything(socket, bufferedWriter, bufferedReader);
+            }
+        }
+    }
+
+    public void removeClientHandler() {
+
+        clientHandlers.remove(this);
+        broadcastMessage("SERVER: " + clientUsername + " opuscil rozmowe.");
+    }
+
+    public void closeEverything(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+
+        removeClientHandler();
+        try {
+            if (bufferedReader != null) {
+                bufferedReader.close();
+            }
+            if (bufferedWriter != null) {
+                bufferedWriter.close();
+            }
+            if (socket != null) {
+                socket.close();
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
