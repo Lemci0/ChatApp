@@ -20,7 +20,7 @@ public class ClientHandler implements Runnable {
             broadcastMessage("SERVER: " + clientUsername + " dolaczyl do rozmowy.");
         }
         catch(IOException e) {
-            closeEverything(socket, bufferedWriter, bufferedReader);
+            closeEverything(socket, bufferedReader, bufferedWriter);
         }
     }
 
@@ -36,7 +36,7 @@ public class ClientHandler implements Runnable {
                 broadcastMessage(messageFromClient);
             }
             catch(IOException e) {
-                closeEverything(socket, bufferedWriter, bufferedReader);
+                closeEverything(socket, bufferedReader, bufferedWriter);
                 break;
             }
         }
@@ -54,7 +54,7 @@ public class ClientHandler implements Runnable {
                 }
             }
             catch (IOException e) {
-                closeEverything(socket, bufferedWriter, bufferedReader);
+                closeEverything(socket, bufferedReader, bufferedWriter);
             }
         }
     }
